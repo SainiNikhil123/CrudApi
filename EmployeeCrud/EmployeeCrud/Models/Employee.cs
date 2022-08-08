@@ -16,8 +16,6 @@ namespace EmployeeCrud.Models
         public int DesignationId { get; set; }
         [ForeignKey("DesignationId")]
         public Designation Designation { get; set; }
-        public int DepartmentId { get; set; }
-        [ForeignKey("DepartmentId")]
-        public Department Department { get; set; }
+       
     }
 }

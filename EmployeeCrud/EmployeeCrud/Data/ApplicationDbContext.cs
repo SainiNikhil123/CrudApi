@@ -16,5 +16,6 @@ namespace EmployeeCrud.Data
         public DbSet<Employee> employees { get; set; }
         public DbSet<Department> departments { get; set; }
         public DbSet<Designation> designations { get; set; }
+        public DbSet<EmpDepTbl> empDepTbls { get; set; }
     }
 }
