@@ -8,6 +8,6 @@ namespace EmployeeCrud.Models
     public class Designation
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string DesName { get; set; }
     }
 }

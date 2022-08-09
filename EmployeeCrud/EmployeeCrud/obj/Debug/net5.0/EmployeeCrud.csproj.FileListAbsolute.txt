@@ -59,3 +59,9 @@ E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\EmployeeCrud.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\ref\EmployeeCrud.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\EmployeeCrud.pdb
 E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\EmployeeCrud.genruntimeconfig.cache
+E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\AutoMapper.dll
+E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.Extensions.Options.dll
+E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.Extensions.Primitives.dll
+E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\System.Runtime.CompilerServices.Unsafe.dll

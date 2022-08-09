@@ -1,15 +1,11 @@
 ﻿using EmployeeCrud.Data;
-using EmployeeCrud.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace EmployeeCrud.Controllers
 {
-    [Route("api/Employee")]
+    [Route("api/employee")]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
@@ -19,47 +15,28 @@ namespace EmployeeCrud.Controllers
             _context = context;
         }
         [HttpGet]
-        public IActionResult GetAllEmployees()
-        {
-            return Ok(_context.employees.ToList());
+        public IActionResult GetEmployees()
+        { //EmpDepTbl edp = new EmpDepTbl();
+            var employeeList = from e in _context.employees
+                               join des in _context.designations
+                               on e.DesignationId equals des.Id
+                               join edp in _context.empDepTbls
+                               on e.Id equals edp.EmployeeId
+                               select new
+                               {
+                                   Name = e.EmpName,
+                                   Address = e.Address,
+                                   Number = e.Number,
+                                   Salary = e.Salary,
+                                   Designation = e.Designation.DesName,
+                                   Department = edp.Department.DepName
+                               };
+          return Ok(employeeList);
         }
-        [HttpGet("api/Employee/{id}")]
-        public IActionResult GetEmployee(int id)
-        {
-            var employeeInDb = _context.employees.Find(id);
-            if (employeeInDb == null) return BadRequest();
-            return Ok(employeeInDb);
-        }
-        [HttpPost]
-        public IActionResult SaveEmployee([FromBody] Employee employee)
-        {
-            if (employee != null && ModelState.IsValid)
-            {
-                _context.employees.Add(employee);
-                _context.SaveChanges();
-                return Ok();
-            }
-            return BadRequest();
-        }
-        [HttpPut]
-        public IActionResult UpdateStudent([FromBody] Employee employee)
-        {
-            if (employee != null && ModelState.IsValid)
-            {
-                _context.employees.Update(employee);
-                _context.SaveChanges();
-                return Ok();
-            }
-            return BadRequest();
-        }
-        [HttpDelete("{id:int}")]
-        public IActionResult DeleteStudent(int id)
-        {
-            var employeeInDb = _context.employees.Find(id);
-            if (employeeInDb == null) return NotFound();
-            _context.employees.Remove(employeeInDb);
-            _context.SaveChanges();
-            return Ok();
-        }
+        //[HttpPost]
+        //public IActionResult SaveEmployee()
+        //{
+        //    var employee=  
+        //}
     }
 }

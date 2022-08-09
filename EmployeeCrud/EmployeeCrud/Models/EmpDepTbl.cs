@@ -14,6 +14,6 @@ namespace EmployeeCrud.Models
         public Employee Employee { get; set; }
         public int DepartmentId { get; set; }
         [ForeignKey("DepartmentId")]
-        public Department De { get; set; }
+        public Department Department { get; set; }
     }
 }

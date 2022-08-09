@@ -9,7 +9,7 @@ namespace EmployeeCrud.Models
     public class Employee
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string EmpName { get; set; }
         public string Address { get; set; }
         public int Number { get; set; }
         public int Salary { get; set; }
