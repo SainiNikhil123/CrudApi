@@ -1,5 +1,7 @@
 ﻿using EmployeeCrud.Data;
+using EmployeeCrud.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,10 +18,8 @@ namespace EmployeeCrud.Controllers
         }
         [HttpGet]
         public IActionResult GetEmployees()
-        { //EmpDepTbl edp = new EmpDepTbl();
+        {
             var employeeList = from e in _context.employees
-                               join des in _context.designations
-                               on e.DesignationId equals des.Id
                                join edp in _context.empDepTbls
                                on e.Id equals edp.EmployeeId
                                select new
@@ -31,12 +31,22 @@ namespace EmployeeCrud.Controllers
                                    Designation = e.Designation.DesName,
                                    Department = edp.Department.DepName
                                };
-          return Ok(employeeList);
+            return Ok(employeeList);
         }
-        //[HttpPost]
-        //public IActionResult SaveEmployee()
-        //{
-        //    var employee=  
-        //}
+        [HttpPost]
+        public IActionResult SaveEmployee([FromBody]Employee employee)
+        {
+            if (employee == null && !ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            //using(Employee emp = Employee())
+            //{
+
+            //}
+            _context.employees.Add(employee);            
+             _context.SaveChanges();
+            return Ok();
+        }
     }
 }

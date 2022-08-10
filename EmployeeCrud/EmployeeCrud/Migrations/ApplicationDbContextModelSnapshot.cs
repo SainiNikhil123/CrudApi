@@ -50,20 +50,13 @@ namespace EmployeeCrud.Migrations
 
             modelBuilder.Entity("EmployeeCrud.Models.EmpDepTbl", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
+                    b.HasKey("DepartmentId", "EmployeeId");
 
                     b.HasIndex("EmployeeId");
 
@@ -101,7 +94,7 @@ namespace EmployeeCrud.Migrations
 
             modelBuilder.Entity("EmployeeCrud.Models.EmpDepTbl", b =>
                 {
-                    b.HasOne("EmployeeCrud.Models.Department", "De")
+                    b.HasOne("EmployeeCrud.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -113,7 +106,7 @@ namespace EmployeeCrud.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("De");
+                    b.Navigation("Department");
 
                     b.Navigation("Employee");
                 });

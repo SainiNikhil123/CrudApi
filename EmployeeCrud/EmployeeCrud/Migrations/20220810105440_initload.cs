@@ -7,12 +7,25 @@ namespace EmployeeCrud.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "departments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DepName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_departments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "designations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    DesName = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -25,7 +38,7 @@ namespace EmployeeCrud.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmpName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Number = table.Column<int>(type: "int", nullable: false),
                     Salary = table.Column<int>(type: "int", nullable: false),
@@ -43,19 +56,23 @@ namespace EmployeeCrud.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "departments",
+                name: "empDepTbls",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false)
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
+                    DepartmentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_departments", x => x.Id);
+                    table.PrimaryKey("PK_empDepTbls", x => new { x.DepartmentId, x.EmployeeId });
                     table.ForeignKey(
-                        name: "FK_departments_employees_EmployeeId",
+                        name: "FK_empDepTbls_departments_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "departments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_empDepTbls_employees_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "employees",
                         principalColumn: "Id",
@@ -63,8 +80,8 @@ namespace EmployeeCrud.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_departments_EmployeeId",
-                table: "departments",
+                name: "IX_empDepTbls_EmployeeId",
+                table: "empDepTbls",
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
@@ -75,6 +92,9 @@ namespace EmployeeCrud.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "empDepTbls");
+
             migrationBuilder.DropTable(
                 name: "departments");
 

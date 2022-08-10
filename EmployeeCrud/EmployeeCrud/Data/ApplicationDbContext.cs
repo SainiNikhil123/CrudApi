@@ -17,5 +17,11 @@ namespace EmployeeCrud.Data
         public DbSet<Department> departments { get; set; }
         public DbSet<Designation> designations { get; set; }
         public DbSet<EmpDepTbl> empDepTbls { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //Composit Key
+            modelBuilder.Entity<EmpDepTbl>().HasKey(x => new { x.DepartmentId, x.EmployeeId });
+        }
     }
 }
