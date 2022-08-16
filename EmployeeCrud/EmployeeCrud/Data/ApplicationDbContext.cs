@@ -22,6 +22,13 @@ namespace EmployeeCrud.Data
         {
             //Composit Key
             modelBuilder.Entity<EmpDepTbl>().HasKey(x => new { x.DepartmentId, x.EmployeeId });
+
+            modelBuilder.Entity<Employee>(entity =>
+            {
+                //entity.HasOne(x=>x.Department.DepartmentId==departments.)
+                //.WithMany(a=>a.)
+
+            });
         }
     }
 }

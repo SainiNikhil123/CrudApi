@@ -11,5 +11,6 @@ namespace EmployeeCrud.Models
         public int Id { get; set; }
         public string DepName { get; set; }
        
+       
     }
 }
