@@ -25,6 +25,17 @@ namespace EmployeeCrud
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cs));
 
             services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "MyPolicys",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200/")
+                                               .AllowAnyOrigin()
+                                               .AllowAnyHeader()
+                                               .AllowAnyMethod();
+                    });
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EmployeeCrud", Version = "v1" });
@@ -40,6 +51,7 @@ namespace EmployeeCrud
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EmployeeCrud v1"));
             }
+            app.UseCors("MyPolicys");
 
             app.UseHttpsRedirection();
 

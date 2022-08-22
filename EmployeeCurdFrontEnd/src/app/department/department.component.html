@@ -1,0 +1,21 @@
+<div class="row p-2 m-2">
+    <div class="offset-1 col-8">
+       <h2 class="text-primary text-center"><b>Department List</b></h2>
+    </div>
+</div>
+<div>
+    <table class="table table-bordered table-active container">
+        <thead>
+            <tr class="text-center">
+                <th>Department Id</th>
+                <th>Department Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="text-center" *ngFor="let dep of DepartmentList">
+                <td>{{dep.id}}</td>
+                <td>{{dep.depName}}</td>                
+            </tr>
+        </tbody>
+    </table>
+</div>
