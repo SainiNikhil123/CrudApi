@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeeCrud.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220812155639_Inverse_Property1")]
-    partial class Inverse_Property1
+    [Migration("20220823103941_edit_tables")]
+    partial class edit_tables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -68,7 +68,7 @@ namespace EmployeeCrud.Migrations
 
             modelBuilder.Entity("EmployeeCrud.Models.Employee", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("EmpId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -88,13 +88,13 @@ namespace EmployeeCrud.Migrations
                     b.Property<int?>("EmployeesEmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
+                    b.Property<string>("Number")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Salary")
-                        .HasColumnType("int");
+                    b.Property<double>("Salary")
+                        .HasColumnType("float");
 
-                    b.HasKey("Id");
+                    b.HasKey("EmpId");
 
                     b.HasIndex("DesignationId");
 

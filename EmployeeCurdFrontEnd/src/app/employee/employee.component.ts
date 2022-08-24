@@ -2,6 +2,7 @@ import { Empdeptbl } from './../empdeptbl';
 import { Employee } from './../employee';
 import { DepartmentService } from './../department.service';
 import { Department } from './../department';
+import {EmployeeListDto} from './../employeeList-dto';
 import { Component, Injectable, OnInit } from '@angular/core';
 import { Designation } from '../designation';
 import { DesignationService } from '../designation.service';
@@ -19,12 +20,14 @@ export class EmployeeComponent implements OnInit {
   
   DesignationList: Designation[]=[];
   DepartmentList: Department[]= [];
-  EmployeeList: Employee[] = []; 
-  newEmployee:Employee = new Employee();
-  editEmployee:Employee =new Employee();
+  EmployeeList: EmployeeListDto[] = []; 
+  newEmployee:EmployeeListDto = new EmployeeListDto();
+  editEmployee:EmployeeListDto =new EmployeeListDto();
   empdes:Empdeptbl= new Empdeptbl();
   selectedDes:number=0;
   editDes:number=0;
+  editDep:number=0;
+  selectedDepartmentId:number=0;
   
 
   constructor(private employeeService:EmployeeService, private designationService:DesignationService) { }
@@ -60,7 +63,7 @@ export class EmployeeComponent implements OnInit {
   getAll()
     {
       
-      this.employeeService.getAllEmployee().subscribe(
+      this.employeeService.getAllEmployees().subscribe(
         (response)=>{
           this.EmployeeList=response;
           //console.log(this.EmployeeList);
@@ -82,10 +85,12 @@ export class EmployeeComponent implements OnInit {
 
   checkboxvalue()
     {
-    //console.log(this.DepartmentList)
-    this.newEmployee.departmentId = this.DepartmentList.filter(x=>x.isselected==true).map(x=>x.id);
+    console.log(this.DepartmentList);
+    this.newEmployee.departmentId = this.DepartmentList.filter(x=>x.isselected==true).map(x=>x.id).join(" ");
     
-    //this.editEmployee.departmentId = this.DepartmentList.filter(x=>x.isselected==true).map(x=>x.id);
+    
+    this.editEmployee.departmentId = this.DepartmentList.filter(x=>x.isselected==true).map(x=>x.id).toString();
+    this.editDep =  this.editEmployee.departmentId;
     }
 
   Dropdown(e:any)
@@ -99,25 +104,26 @@ export class EmployeeComponent implements OnInit {
 
   saveClick()
   {
+    //debugger;
     this.newEmployee.id=0; 
-    this.newEmployee.departmentId = this.DepartmentList.filter(x=>x.isselected==true).map(x=>x.id).join(",");
-    
+    this.newEmployee.departmentId = this.DepartmentList.filter(x=>x.isselected==true).map(x=>x.id);
     this.EmployeeList.push(this.newEmployee.departmentId);
-    this.empdes.employeeId = this.newEmployee.id;
-    this.empdes.departmentId = this.newEmployee.departmentId;
-    this.newEmployee.employees = this.empdes;
+    this.newEmployee.departmentIds = this.newEmployee.departmentId;
+    this.newEmployee.departmenteditid = 0;
+    this.newEmployee.departmentId = 0;    
+    
     //alert(this.employee.designationId);
     this.employeeService.saveEmployee(this.newEmployee).subscribe(
-      (response)=>{
-        this.clrRec();
-        this.getAll();        
+      (response)=>{        
+        this.getAll()  
+        this.clrRec()      
       },
       (error)=>{
         console.log(error);
       }
     );
   }
-  editClick(emp:Employee)
+  editClick(emp:EmployeeListDto)
   {
     
     //debugger;
@@ -125,16 +131,28 @@ export class EmployeeComponent implements OnInit {
     this.editEmployee=emp;
     this.editDes = this.editEmployee.designationId;
     
-    //alert(this.editDes);
-    let selectedDepartmentId = emp.departmentId;
-    this.DepartmentList.filter(x=>x.id == Number(selectedDepartmentId)).map(x=>x.isselected = true);
+    
+    //alert(this.editEmployee.departmentId);
+    this.selectedDepartmentId = emp.departmentId;    
+    this.DepartmentList.filter(x=>x.id == Number(this.selectedDepartmentId)).map(x=>x.isselected = true);
     
     
   }
 
   updateClick()
-  {
-
+  { 
+    debugger;
+    
+    this.editEmployee.departmenteditid = this.selectedDepartmentId;
+    
+    this.employeeService.updateEmployee(this.editEmployee).subscribe(
+      (response)=>{
+        this.getAll()        
+      },
+      (error)=>{
+        console.log(error);
+      }
+    );
   }
 
   deleteClick(emp:any)
@@ -147,7 +165,7 @@ export class EmployeeComponent implements OnInit {
     //alert(this.employee.id);
     this.employeeService.deleteEmployee(this.newEmployee.id,this.newEmployee.departmentId).subscribe(
       (response)=>{
-        this.getAll();
+        this.getAll()
       },
       (error)=>{
         console.log(error);

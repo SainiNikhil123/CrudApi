@@ -1,4 +1,5 @@
 using EmployeeCrud.Data;
+using EmployeeCrud.DTOMappingProfile;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ namespace EmployeeCrud
         {
             string cs = Configuration.GetConnectionString("con");
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cs));
+            services.AddAutoMapper(typeof(DtoMappingProfile));
 
             services.AddControllers();
             services.AddCors(options =>
@@ -40,6 +42,7 @@ namespace EmployeeCrud
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EmployeeCrud", Version = "v1" });
             });
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,3 +1,4 @@
+import { EmployeeListDto } from './employeeList-dto';
 import { Empdeptbl } from './empdeptbl';
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
@@ -11,17 +12,21 @@ export class EmployeeService {
 
   constructor(private httpClient : HttpClient) { }
 
-  getAllEmployee():Observable<any>
+  getAllEmployees():Observable<any>
   {
     return this.httpClient.get<any>("http://localhost:65158/api/employee");
   }
-  saveEmployee(newEmployee:Employee):Observable<Employee>
+  getEmployee(id:number):Observable<any>
   {
-    return this.httpClient.post<Employee>("http://localhost:65158/api/employee",newEmployee);
+    return this.httpClient.get<any>("http://localhost:65158/api/employee/"+id);
   }
-  updateEmployee(editEmployee:Employee):Observable<Employee>
+  saveEmployee(newEmployee:EmployeeListDto):Observable<EmployeeListDto>
   {
-    return this.httpClient.post<Employee>("http://localhost:65158/api/employee",editEmployee);
+    return this.httpClient.post<EmployeeListDto>("http://localhost:65158/api/employee",newEmployee);
+  }
+  updateEmployee(editEmployee:EmployeeListDto):Observable<EmployeeListDto>
+  {
+    return this.httpClient.put<EmployeeListDto>("http://localhost:65158/api/employee",editEmployee);
   }
   deleteEmployee(id:number,depid:number):Observable<any>
   {

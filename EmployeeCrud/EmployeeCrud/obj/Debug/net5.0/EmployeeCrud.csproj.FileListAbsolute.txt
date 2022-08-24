@@ -7,6 +7,8 @@ E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\EmployeeCrud.runtimeconfi
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\EmployeeCrud.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\ref\EmployeeCrud.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\EmployeeCrud.pdb
+E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\AutoMapper.dll
+E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Humanizer.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.Data.SqlClient.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.dll
@@ -15,6 +17,9 @@ E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.EntityFramework
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
+E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.Extensions.Options.dll
+E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.Extensions.Primitives.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.Identity.Client.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
@@ -30,6 +35,7 @@ E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\System.Configuration.Conf
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\System.Runtime.Caching.dll
+E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\System.Runtime.CompilerServices.Unsafe.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\System.Security.Cryptography.ProtectedData.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
@@ -43,7 +49,6 @@ E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\runtimes\win-x86\native\M
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.pdb
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
-E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\EmployeeCrud.csproj.AssemblyReference.cache
 E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\EmployeeCrud.GeneratedMSBuildEditorConfig.editorconfig
 E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\EmployeeCrud.AssemblyInfoInputs.cache
 E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\EmployeeCrud.AssemblyInfo.cs
@@ -59,9 +64,4 @@ E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\EmployeeCrud.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\ref\EmployeeCrud.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\EmployeeCrud.pdb
 E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\EmployeeCrud.genruntimeconfig.cache
-E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\AutoMapper.dll
-E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
-E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
-E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.Extensions.Options.dll
-E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.Extensions.Primitives.dll
-E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\System.Runtime.CompilerServices.Unsafe.dll
+E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\EmployeeCrud.csproj.AssemblyReference.cache

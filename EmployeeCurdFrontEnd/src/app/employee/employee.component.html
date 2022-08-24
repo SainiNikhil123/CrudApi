@@ -21,7 +21,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let employee of EmployeeList; let i = index">
+            <tr *ngFor="let employee of EmployeeList">
                 <td>{{employee.id}}</td>
                 <td>{{employee.empName}}</td>
                 <td>{{employee.address}}</td>
@@ -31,7 +31,7 @@
                 <td>{{employee.department}}</td>
                 <td>
                     <div>
-                        <button (click)="editClick(employee)" class="btn btn-info p-1 m-1" data-toggle="modal" 
+                        <button (click)="editClick(employee)" class="btn btn-info p-1 m-1" data-toggle="modal"  
                         data-target="#editModal">Edit</button>
                         <button (click)="deleteClick(employee)" class="btn btn-danger p-1 m-1" >Delete</button>
                     </div>
@@ -43,7 +43,7 @@
 
 <!-- SAVE -->
   
-  <form (ngSubmit)="saveClick()" >
+  <form >
     <div class="modal" role="dialog" id="saveModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -96,7 +96,7 @@
                         <label class="col-sm-4">Department</label>
                         <div class="col-sm-8 offset-3" *ngFor="let dep of DepartmentList">
                             <input type="checkbox" value="{{dep.id}}" name="{{dep.depName}}" (change)="checkboxvalue()" 
-                             class="checkbox" /><label>{{dep.depName}}</label>
+                            [(ngModel)]="dep.isselected" class="checkbox" /><label>{{dep.depName}}</label>
                         </div>
                     </div>
                 </div>
@@ -116,8 +116,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <!-- <button (click)="saveClick()" type="button" class="btn btn-success" data-dismiss="modal">SAVE</button> -->
-                    <input class="btn btn-info" type="submit" value="Save" />
+                    <button (click)="saveClick()" type="button" class="btn btn-success" data-dismiss="modal">SAVE</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">CANCEL</button>
                 </div>
 
@@ -127,7 +126,7 @@
 </form>
 
 <!-- EDIT -->
-<form (ngSubmit)="updateClick()"  >
+<form>
     <div class="modal" role="dialog" id="editModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -200,7 +199,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <input class="btn btn-info" type="submit" value="Update" />
+                    <button (click)="updateClick()" type="button" class="btn btn-success" data-dismiss="modal">SAVE</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">CANCEL</button>
                 </div>
 

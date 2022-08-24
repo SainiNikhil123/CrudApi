@@ -4,14 +4,16 @@ using EmployeeCrud.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EmployeeCrud.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220823081133_inverse_Prop")]
+    partial class inverse_Prop
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,7 +68,7 @@ namespace EmployeeCrud.Migrations
 
             modelBuilder.Entity("EmployeeCrud.Models.Employee", b =>
                 {
-                    b.Property<int>("EmpId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -86,13 +88,13 @@ namespace EmployeeCrud.Migrations
                     b.Property<int?>("EmployeesEmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Number")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
 
-                    b.Property<double>("Salary")
-                        .HasColumnType("float");
+                    b.Property<int>("Salary")
+                        .HasColumnType("int");
 
-                    b.HasKey("EmpId");
+                    b.HasKey("Id");
 
                     b.HasIndex("DesignationId");
 

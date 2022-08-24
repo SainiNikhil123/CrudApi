@@ -1,10 +1,14 @@
-﻿using EmployeeCrud.Data;
+﻿using AutoMapper;
+using EmployeeCrud.Data;
 using EmployeeCrud.Models;
 using EmployeeCrud.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using System.IO;
+using System.Text;
 
 namespace EmployeeCrud.Controllers
 {
@@ -13,28 +17,31 @@ namespace EmployeeCrud.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        public EmployeeController(ApplicationDbContext context)
+        //private readonly IMapper _mapper;
+        public EmployeeController(ApplicationDbContext context /*,IMapper mapper*/)
         {
             _context = context;
+            //_mapper = mapper;
         }
         [HttpGet]
         public IActionResult GetEmployees()
         {
-            var employeeList = from e in _context.employees
-                               join edp in _context.empDepTbls
-                               on e.Id equals edp.EmployeeId
-                               select new EmployeeListDto()
-                               {
-                                   Id = e.Id,
-                                   EmpName = e.EmpName,
-                                   Address = e.Address,
-                                   Number = e.Number,
-                                   Salary = e.Salary,
-                                   DesignationId = e.DesignationId,
-                                   Designation = e.Designation.DesName,
-                                   DepartmentId = edp.DepartmentId,
-                                   Department = edp.Department.DepName
-                               };
+            var employeeList = (from e in _context.employees
+                                join edp in _context.empDepTbls
+                                on e.EmpId equals edp.EmployeeId
+                                select new EmployeeListDto()
+                                {
+                                    Id = e.EmpId,
+                                    EmpName = e.EmpName,
+                                    Address = e.Address,
+                                    Number = e.Number,
+                                    Salary = e.Salary,
+                                    DesignationId = e.DesignationId,
+                                    Designation = e.Designation.DesName,
+                                    DepartmentId = edp.Department.Id,
+                                    Department = edp.Department.DepName,
+                                });
+
             return Ok(employeeList);
         }
 
@@ -44,22 +51,22 @@ namespace EmployeeCrud.Controllers
             var employeeFromDb = _context.employees.Find(id);
             if (employeeFromDb == null) return BadRequest(error: "Employee Id Is Invalid");
 
-            var employee = from e in _context.employees
-                           join edp in _context.empDepTbls
-                           on e.Id equals edp.EmployeeId
-                           where e.Id == id
-                           select new EmployeeListDto()
-                           {
-                               Id = e.Id,
-                               EmpName = e.EmpName,
-                               Address = e.Address,
-                               Number = e.Number,
-                               Salary = e.Salary,
-                               DesignationId = e.DesignationId,
-                               Designation = e.Designation.DesName,
-                               DepartmentId = edp.DepartmentId,
-                               Department = edp.Department.DepName
-                           };
+            var employee = (from e in _context.employees
+                            join edp in _context.empDepTbls
+                            on e.EmpId equals edp.EmployeeId
+                            where e.EmpId == id
+                            select new EmployeeListDto()
+                            {
+                                Id = e.EmpId,
+                                EmpName = e.EmpName,
+                                Address = e.Address,
+                                Number = e.Number,
+                                Salary = e.Salary,
+                                DesignationId = e.DesignationId,
+                                Designation = e.Designation.DesName,
+                                DepartmentId = edp.Department.Id,
+                                Department = edp.Department.DepName
+                            });
 
             return Ok(employee);
         }
@@ -67,13 +74,16 @@ namespace EmployeeCrud.Controllers
         [HttpPost]
         public IActionResult SaveEmployee([FromBody] EmployeeListDto employee)
         {
-            //var depId = employee.Employees.ToString();
-            //var dep = depId.Count();
+            //string depId = employee.DepartmentIds;
+            //char[] deppId = depId.ToCharArray();
+
+            var dep = employee.DepartmentIds.Count();
+
             if (employee != null && ModelState.IsValid)
             {
-
                 Employee emp = new Employee()
                 {
+                    EmpId = employee.Id,
                     EmpName = employee.EmpName,
                     Address = employee.Address,
                     Number = employee.Number,
@@ -82,43 +92,73 @@ namespace EmployeeCrud.Controllers
                 };
                 _context.employees.Add(emp);
                 _context.SaveChanges();
-                //if (dep > 1)
-                //{
-                //    foreach (var depp in )
-                //    {
-                //        EmpDepTbl edt = new EmpDepTbl()
-                //        {
-                //            EmployeeId = emp.Id,
-                //            DepartmentId = 
-                //        };
-                //        _context.empDepTbls.Add(edt);
-                //        _context.SaveChanges();
-                //    }
-                //}
-                //else
-                //{
+
+                foreach (var d in employee.DepartmentIds)
+                {
                     EmpDepTbl edt = new EmpDepTbl()
                     {
-                        EmployeeId = emp.Id,
-                        DepartmentId = employee.DepartmentId
+                        EmployeeId = emp.EmpId,
+                        DepartmentId = d
                     };
                     _context.empDepTbls.Add(edt);
                     _context.SaveChanges();
-                //}
+                }
+
                 return Ok();
             }
             return BadRequest();
         }
+
+        [HttpPut]
+        public IActionResult UpdateEmployee([FromBody] EmployeeListDto employee)
+        {
+            //var empl = _context.employees.Find(employee.Id);
+            //if (empl == null) return BadRequest(error: "Data Not Found");
+
+            if (employee != null && ModelState.IsValid)
+            {
+
+                Employee emp = new Employee()
+                {
+                    EmpId = employee.Id,
+                    EmpName = employee.EmpName,
+                    Address = employee.Address,
+                    Number = employee.Number,
+                    Salary = employee.Salary,
+                    DesignationId = employee.DesignationId,
+                    Employees = null
+                };
+                _context.employees.Update(emp);
+                _context.SaveChanges();
+                if (employee.DepartmentId != employee.Departmenteditid)
+                {
+                    var edt = _context.empDepTbls.FirstOrDefault(x => x.EmployeeId == employee.Id && x.DepartmentId == employee.Departmenteditid);
+                    _context.empDepTbls.Remove(edt);
+                    _context.SaveChanges();
+
+                    EmpDepTbl edt1 = new EmpDepTbl()
+                    {
+                        EmployeeId = employee.Id,
+                        DepartmentId = employee.DepartmentId
+                    };
+                    _context.empDepTbls.Add(edt1);
+                    _context.SaveChanges();
+                }
+                return Ok();
+            }
+            return BadRequest(error: "Error While Updating");
+        }
+
         [HttpDelete("{id:int}")]
         public IActionResult DeleteEmployee(int id, int depid)
         {
             var employee = from e in _context.employees
                            join edp in _context.empDepTbls
-                           on e.Id equals edp.EmployeeId
-                           where e.Id == id
-                           select new EmployeeListDto()
+                           on e.EmpId equals edp.EmployeeId
+                           where e.EmpId == id
+                           select new
                            {
-                               Id = e.Id,
+                               id = e.EmpId,
                                EmpName = e.EmpName,
                                Address = e.Address,
                                Number = e.Number,
@@ -126,7 +166,7 @@ namespace EmployeeCrud.Controllers
                                Designation = e.Designation.DesName,
                                DepartmentId = edp.Department.Id
                            };
-           
+
             if (employee.Count() > 1)
             {
                 EmpDepTbl edt = new EmpDepTbl()
@@ -145,35 +185,7 @@ namespace EmployeeCrud.Controllers
             _context.SaveChanges();
             return Ok();
         }
-        [HttpPut]
-        public IActionResult UpdateEmployee([FromBody] EmployeeListDto employee)
-        {
-            if (employee == null) return NotFound();
-            if (ModelState.IsValid)
-            {
-                Employee emp = new Employee()
-                {
-                    Id = employee.Id,
-                    EmpName = employee.EmpName,
-                    Address = employee.Address,
-                    Number = employee.Number,
-                    Salary = employee.Salary,
-                    DesignationId = employee.DesignationId
-                };
-                _context.employees.Update(emp);
-                _context.SaveChanges();
-
-                EmpDepTbl edt = new EmpDepTbl()
-                {
-                    EmployeeId = emp.Id,
-                    DepartmentId = employee.DepartmentId
-                };
-                _context.empDepTbls.Update(edt);
-                _context.SaveChanges();
-                return Ok();
-            }
-            return BadRequest(error: "Error While Updating");
-        }
     }
+        
 }
 
