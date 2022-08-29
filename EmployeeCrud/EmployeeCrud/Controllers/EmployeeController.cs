@@ -25,7 +25,7 @@ namespace EmployeeCrud.Controllers
         }
         [HttpGet]
         public IActionResult GetEmployees()
-        {
+       {
             var employeeList = (from e in _context.employees
                                 join edp in _context.empDepTbls
                                 on e.EmpId equals edp.EmployeeId
@@ -112,23 +112,19 @@ namespace EmployeeCrud.Controllers
         [HttpPut]
         public IActionResult UpdateEmployee([FromBody] EmployeeListDto employee)
         {
-            //var empl = _context.employees.Find(employee.Id);
-            //if (empl == null) return BadRequest(error: "Data Not Found");
+            var empl = _context.employees.Find(employee.Id);
+            if (empl == null) return BadRequest(error: "Data Not Found");
 
             if (employee != null && ModelState.IsValid)
             {
-
-                Employee emp = new Employee()
-                {
-                    EmpId = employee.Id,
-                    EmpName = employee.EmpName,
-                    Address = employee.Address,
-                    Number = employee.Number,
-                    Salary = employee.Salary,
-                    DesignationId = employee.DesignationId,
-                    Employees = null
-                };
-                _context.employees.Update(emp);
+                empl.EmpId = employee.Id;
+                empl.EmpName = employee.EmpName;
+                empl.Address = employee.Address;
+                empl.Number = employee.Number;
+                empl.Salary = employee.Salary;
+                empl.DesignationId = employee.DesignationId;                    
+                
+                _context.employees.Update(empl);
                 _context.SaveChanges();
                 if (employee.DepartmentId != employee.Departmenteditid)
                 {
