@@ -23,9 +23,10 @@ namespace EmployeeCrud.Controllers
             _context = context;
             //_mapper = mapper;
         }
+        #region get/find
         [HttpGet]
         public IActionResult GetEmployees()
-       {
+        {
             var employeeList = (from e in _context.employees
                                 join edp in _context.empDepTbls
                                 on e.EmpId equals edp.EmployeeId
@@ -71,6 +72,9 @@ namespace EmployeeCrud.Controllers
             return Ok(employee);
         }
 
+        #endregion
+
+        #region post/put
         [HttpPost]
         public IActionResult SaveEmployee([FromBody] EmployeeListDto employee)
         {
@@ -108,7 +112,6 @@ namespace EmployeeCrud.Controllers
             }
             return BadRequest();
         }
-
         [HttpPut]
         public IActionResult UpdateEmployee([FromBody] EmployeeListDto employee)
         {
@@ -122,8 +125,8 @@ namespace EmployeeCrud.Controllers
                 empl.Address = employee.Address;
                 empl.Number = employee.Number;
                 empl.Salary = employee.Salary;
-                empl.DesignationId = employee.DesignationId;                    
-                
+                empl.DesignationId = employee.DesignationId;
+
                 _context.employees.Update(empl);
                 _context.SaveChanges();
                 if (employee.DepartmentId != employee.Departmenteditid)
@@ -145,6 +148,9 @@ namespace EmployeeCrud.Controllers
             return BadRequest(error: "Error While Updating");
         }
 
+        #endregion
+
+        #region del
         [HttpDelete("{id:int}")]
         public IActionResult DeleteEmployee(int id, int depid)
         {
@@ -182,6 +188,10 @@ namespace EmployeeCrud.Controllers
             return Ok();
         }
     }
-        
+    #endregion
+
+
+
+
 }
 

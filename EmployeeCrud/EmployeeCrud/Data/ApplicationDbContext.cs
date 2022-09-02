@@ -20,12 +20,8 @@ namespace EmployeeCrud.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Composit Key
-            modelBuilder.Entity<EmpDepTbl>().HasKey(x => new { x.DepartmentId, x.EmployeeId });
-
-            
-
-
+            //Composite Key
+            modelBuilder.Entity<EmpDepTbl>().HasKey(x => new { x.DepartmentId, x.EmployeeId });          
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
