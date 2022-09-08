@@ -1,5 +1,4 @@
-import { Department } from './department';
-import { Empdeptbl } from './empdeptbl';
+
 export class EmployeeListDto {
      id:any;
      empName:any;

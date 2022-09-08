@@ -31,7 +31,7 @@ namespace EmployeeCrud.Controllers
                                 join edp in _context.empDepTbls
                                 on e.EmpId equals edp.EmployeeId
                                 select new EmployeeListDto()
-                                {
+                                { 
                                     Id = e.EmpId,
                                     EmpName = e.EmpName,
                                     Address = e.Address,

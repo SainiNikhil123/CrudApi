@@ -1,5 +1,4 @@
-import { Empdeptbl } from './../empdeptbl';
-import { Employee } from './../employee';
+
 import { DepartmentService } from './../department.service';
 import { Department } from './../department';
 import {EmployeeListDto} from './../employeeList-dto';
@@ -24,10 +23,8 @@ export class EmployeeComponent implements OnInit {
   EmployeeList: EmployeeListDto[] = []; 
   newEmployee:EmployeeListDto = new EmployeeListDto();
   editEmployee:EmployeeListDto =new EmployeeListDto();
-  empdes:Empdeptbl= new Empdeptbl();
   selectedDes:number=0;
   editDes:number=0;
-  editDep:number=0;
   selectedDepartmentId:number=0;
   
 
@@ -67,7 +64,6 @@ export class EmployeeComponent implements OnInit {
       this.employeeService.getAllEmployees().subscribe(
         (response)=>{
           this.EmployeeList=response;
-          //console.log(this.EmployeeList);
         },
         (error)=>{
           console.log(error);
@@ -86,34 +82,23 @@ export class EmployeeComponent implements OnInit {
 
   checkboxvalue()
     {
-    console.log(this.DepartmentList);
-    this.newEmployee.departmentId = this.DepartmentList.filter(x=>x.isselected==true).map(x=>x.id).join(" ");
-    
-    
+    console.log(this.DepartmentList);    
     this.editEmployee.departmentId = this.DepartmentList.filter(x=>x.isselected==true).map(x=>x.id).toString();
-    this.editDep =  this.editEmployee.departmentId;
     }
 
   Dropdown(e:any)
   {
-   
    this.newEmployee.designationId = e.target.value;
-   this.selectedDes = this.newEmployee.designationId
-
-   //console.log(this.employee.designationId);
   }
 
   saveClick()
   {
-    //debugger;
     this.newEmployee.id=0; 
     this.newEmployee.departmentId = this.DepartmentList.filter(x=>x.isselected==true).map(x=>x.id);
     this.EmployeeList.push(this.newEmployee.departmentId);
     this.newEmployee.departmentIds = this.newEmployee.departmentId;
     this.newEmployee.departmenteditid = 0;
     this.newEmployee.departmentId = 0;    
-    
-    //alert(this.employee.designationId);
     this.employeeService.saveEmployee(this.newEmployee).subscribe(
       (response)=>{        
         this.getAll();  
@@ -133,26 +118,17 @@ export class EmployeeComponent implements OnInit {
   }
   editClick(emp:EmployeeListDto)
   {
-    
-    //debugger;
     this.getAllDep();
     this.editEmployee=emp;
     this.editDes = this.editEmployee.designationId;
-    
-    
-    //alert(this.editEmployee.departmentId);
+     
     this.selectedDepartmentId = emp.departmentId;    
     this.DepartmentList.filter(x=>x.id == Number(this.selectedDepartmentId)).map(x=>x.isselected = true);
-    
-    
   }
 
   updateClick()
   { 
-    debugger;
-    
     this.editEmployee.departmenteditid = this.selectedDepartmentId;
-    
     this.employeeService.updateEmployee(this.editEmployee).subscribe(
       (response)=>{
         this.getAll();
@@ -205,7 +181,6 @@ export class EmployeeComponent implements OnInit {
           'success'
         )
       } else if (
-        /* Read more about handling dismissals below */
         result.dismiss === Swal.DismissReason.cancel
       ) {
         swalWithBootstrapButtons.fire(
@@ -218,5 +193,8 @@ export class EmployeeComponent implements OnInit {
     
   }
 
-  
+  EmptyChkBox()
+  {
+    this.getAllDep(); 
+  }
 }
