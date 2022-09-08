@@ -81,7 +81,7 @@ namespace EmployeeCrud.Controllers
             //string depId = employee.DepartmentIds;
             //char[] deppId = depId.ToCharArray();
 
-            var dep = employee.DepartmentIds.Count();
+            //var dep = employee.DepartmentIds.Count();
 
             if (employee != null && ModelState.IsValid)
             {

@@ -8,6 +8,7 @@ import { Designation } from '../designation';
 import { DesignationService } from '../designation.service';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { EmployeeService } from '../employee.service';
+import Swal from 'sweetalert2'
 
 
 @Component({
@@ -115,8 +116,15 @@ export class EmployeeComponent implements OnInit {
     //alert(this.employee.designationId);
     this.employeeService.saveEmployee(this.newEmployee).subscribe(
       (response)=>{        
-        this.getAll()  
-        this.clrRec()      
+        this.getAll();  
+        this.clrRec();
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'Employee has been saved',
+          showConfirmButton: false,
+          timer: 1500
+        })      
       },
       (error)=>{
         console.log(error);
@@ -147,7 +155,14 @@ export class EmployeeComponent implements OnInit {
     
     this.employeeService.updateEmployee(this.editEmployee).subscribe(
       (response)=>{
-        this.getAll()        
+        this.getAll();
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'Employee has been Updated',
+          showConfirmButton: false,
+          timer: 1500
+        })        
       },
       (error)=>{
         console.log(error);
@@ -157,19 +172,51 @@ export class EmployeeComponent implements OnInit {
 
   deleteClick(emp:any)
   {
-   
     this.newEmployee=emp;
-    
-    let ans=confirm("Want To Delete Data ?")
-    if(!ans) return;
-    //alert(this.employee.id);
-    this.employeeService.deleteEmployee(this.newEmployee.id,this.newEmployee.departmentId).subscribe(
-      (response)=>{
-        this.getAll()
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
       },
-      (error)=>{
-        console.log(error);
+      buttonsStyling: false
+    })
+    
+    swalWithBootstrapButtons.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.employeeService.deleteEmployee(this.newEmployee.id,this.newEmployee.departmentId).subscribe(
+          (response)=>{
+            this.getAll()
+          },
+          (error)=>{
+            console.log(error);
+          }
+        )
+        swalWithBootstrapButtons.fire(
+          'Deleted!',
+          'Your file has been deleted.',
+          'success'
+        )
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Cancelled',
+          'Data Not Deleted',
+          'error'
+        )
       }
-    )
+    })
+    
   }
+
+  
 }

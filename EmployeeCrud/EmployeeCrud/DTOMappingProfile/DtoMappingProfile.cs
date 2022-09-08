@@ -12,8 +12,7 @@ namespace EmployeeCrud.DTOMappingProfile
     {
         public DtoMappingProfile()
         {
-            CreateMap<Employee, EmployeeListDto>().ReverseMap();        
-
-        }
+            CreateMap<Employee, EmployeeListDto>().ReverseMap();
+                    }
     }
 }
