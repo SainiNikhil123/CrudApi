@@ -17,11 +17,9 @@ namespace EmployeeCrud.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        //private readonly IMapper _mapper;
-        public EmployeeController(ApplicationDbContext context /*,IMapper mapper*/)
+        public EmployeeController(ApplicationDbContext context )
         {
             _context = context;
-            //_mapper = mapper;
         }
         #region get/find
         [HttpGet]
@@ -31,7 +29,7 @@ namespace EmployeeCrud.Controllers
                                 join edp in _context.empDepTbls
                                 on e.EmpId equals edp.EmployeeId
                                 select new EmployeeListDto()
-                                { 
+                                {
                                     Id = e.EmpId,
                                     EmpName = e.EmpName,
                                     Address = e.Address,
@@ -67,7 +65,7 @@ namespace EmployeeCrud.Controllers
                                 Designation = e.Designation.DesName,
                                 DepartmentId = edp.Department.Id,
                                 Department = edp.Department.DepName
-                            });
+                            }).FirstOrDefault();
 
             return Ok(employee);
         }
@@ -76,33 +74,28 @@ namespace EmployeeCrud.Controllers
 
         #region post/put
         [HttpPost]
-        public IActionResult SaveEmployee([FromBody] EmployeeListDto employee)
+        public IActionResult SaveEmployee([FromBody] EmployeeListDto newEmployee)
         {
-            //string depId = employee.DepartmentIds;
-            //char[] deppId = depId.ToCharArray();
-
-            //var dep = employee.DepartmentIds.Count();
-
-            if (employee != null && ModelState.IsValid)
+            if (newEmployee != null && ModelState.IsValid)
             {
-                Employee emp = new Employee()
+                Employee employee = new Employee()
                 {
-                    EmpId = employee.Id,
-                    EmpName = employee.EmpName,
-                    Address = employee.Address,
-                    Number = employee.Number,
-                    Salary = employee.Salary,
-                    DesignationId = employee.DesignationId
+                    EmpId = newEmployee.Id,
+                    EmpName = newEmployee.EmpName,
+                    Address = newEmployee.Address,
+                    Number = newEmployee.Number,
+                    Salary = newEmployee.Salary,
+                    DesignationId = newEmployee.DesignationId
                 };
-                _context.employees.Add(emp);
+                _context.employees.Add(employee);
                 _context.SaveChanges();
 
-                foreach (var d in employee.DepartmentIds)
+                foreach (var dep in newEmployee.DepartmentIds)
                 {
                     EmpDepTbl edt = new EmpDepTbl()
                     {
-                        EmployeeId = emp.EmpId,
-                        DepartmentId = d
+                        EmployeeId = employee.EmpId,
+                        DepartmentId = dep
                     };
                     _context.empDepTbls.Add(edt);
                     _context.SaveChanges();
@@ -113,81 +106,103 @@ namespace EmployeeCrud.Controllers
             return BadRequest();
         }
         [HttpPut]
-        public IActionResult UpdateEmployee([FromBody] EmployeeListDto employee)
+        public IActionResult UpdateEmployee([FromBody] EmployeeListDto editEmployee)
         {
-            var empl = _context.employees.Find(employee.Id);
-            if (empl == null) return BadRequest(error: "Data Not Found");
+            var employee = _context.employees.Find(editEmployee.Id);
+            if (employee == null) return BadRequest(error: "Data Not Found");
 
-            if (employee != null && ModelState.IsValid)
+            if (editEmployee != null && ModelState.IsValid)
             {
-                empl.EmpId = employee.Id;
-                empl.EmpName = employee.EmpName;
-                empl.Address = employee.Address;
-                empl.Number = employee.Number;
-                empl.Salary = employee.Salary;
-                empl.DesignationId = employee.DesignationId;
+                employee.EmpId = editEmployee.Id;
+                employee.EmpName = editEmployee.EmpName;
+                employee.Address = editEmployee.Address;
+                employee.Number = editEmployee.Number;
+                employee.Salary = editEmployee.Salary;
+                employee.DesignationId = editEmployee.DesignationId;
 
-                _context.employees.Update(empl);
+                _context.employees.Update(employee);
                 _context.SaveChanges();
-                if (employee.DepartmentId != employee.Departmenteditid)
+
+                if (editEmployee.DepartmentIds.Count > 1)
                 {
-                    var edt = _context.empDepTbls.FirstOrDefault(x => x.EmployeeId == employee.Id && x.DepartmentId == employee.Departmenteditid);
-                    _context.empDepTbls.Remove(edt);
+                    var empdep = _context.empDepTbls.FirstOrDefault(x => x.EmployeeId == editEmployee.Id && x.DepartmentId == editEmployee.Departmenteditid);
+                    _context.empDepTbls.Remove(empdep);
                     _context.SaveChanges();
 
-                    EmpDepTbl edt1 = new EmpDepTbl()
+                    foreach (var d in editEmployee.DepartmentIds)
                     {
-                        EmployeeId = employee.Id,
-                        DepartmentId = employee.DepartmentId
-                    };
-                    _context.empDepTbls.Add(edt1);
-                    _context.SaveChanges();
+                        EmpDepTbl edt = new EmpDepTbl()
+                        {
+                            EmployeeId = employee.EmpId,
+                            DepartmentId = d
+                        };
+                        _context.empDepTbls.Add(edt);
+                        _context.SaveChanges();
+                    }
+                }
+                else
+                {
+                    if (editEmployee.Departmenteditid != editEmployee.DepartmentId)
+                    {
+                        var empdep = _context.empDepTbls.FirstOrDefault(x => x.EmployeeId == editEmployee.Id && x.DepartmentId == editEmployee.Departmenteditid);
+                        _context.empDepTbls.Remove(empdep);
+                        _context.SaveChanges();
+                        EmpDepTbl edt = new EmpDepTbl()
+                        {
+                            EmployeeId = employee.EmpId,
+                            DepartmentId = editEmployee.DepartmentId
+                        };
+                        _context.empDepTbls.Add(edt);
+                        _context.SaveChanges();
+                    }
                 }
                 return Ok();
             }
             return BadRequest(error: "Error While Updating");
         }
+            
 
-        #endregion
+    #endregion
 
-        #region del
-        [HttpDelete("{id:int}")]
-        public IActionResult DeleteEmployee(int id, int depid)
+    #region del
+    [HttpDelete("{id:int}")]
+    public IActionResult DeleteEmployee(int id, int depid)
+    {
+           
+        var employee = from e in _context.employees
+                       join edp in _context.empDepTbls
+                       on e.EmpId equals edp.EmployeeId
+                       where e.EmpId == id
+                       select new
+                       {
+                           id = e.EmpId,
+                           EmpName = e.EmpName,
+                           Address = e.Address,
+                           Number = e.Number,
+                           Salary = e.Salary,
+                           Designation = e.Designation.DesName,
+                           DepartmentId = edp.Department.Id
+                       };
+
+        if (employee.Count() > 1)
         {
-            var employee = from e in _context.employees
-                           join edp in _context.empDepTbls
-                           on e.EmpId equals edp.EmployeeId
-                           where e.EmpId == id
-                           select new
-                           {
-                               id = e.EmpId,
-                               EmpName = e.EmpName,
-                               Address = e.Address,
-                               Number = e.Number,
-                               Salary = e.Salary,
-                               Designation = e.Designation.DesName,
-                               DepartmentId = edp.Department.Id
-                           };
-
-            if (employee.Count() > 1)
+            EmpDepTbl edt = new EmpDepTbl()
             {
-                EmpDepTbl edt = new EmpDepTbl()
-                {
-                    EmployeeId = id,
-                    DepartmentId = depid
-                };
-                _context.empDepTbls.Remove(edt);
-            }
-            else
-            {
-                var employees = _context.employees.Find(id);
-                if (employees == null) return BadRequest(error: "Error While Deleting");
-                _context.employees.Remove(employees);
-            }
-            _context.SaveChanges();
-            return Ok();
+                EmployeeId = id,
+                DepartmentId = depid
+            };
+            _context.empDepTbls.Remove(edt);
         }
+        else
+        {
+            var employees = _context.employees.Find(id);
+            if (employees == null) return BadRequest(error: "Error While Deleting");
+            _context.employees.Remove(employees);
+        }
+        _context.SaveChanges();
+        return Ok();
     }
+}
     #endregion
 
 

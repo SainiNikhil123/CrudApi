@@ -1,11 +1,8 @@
-
-import { DepartmentService } from './../department.service';
 import { Department } from './../department';
 import {EmployeeListDto} from './../employeeList-dto';
 import { Component, Injectable, OnInit } from '@angular/core';
 import { Designation } from '../designation';
 import { DesignationService } from '../designation.service';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { EmployeeService } from '../employee.service';
 import Swal from 'sweetalert2'
 
@@ -25,6 +22,8 @@ export class EmployeeComponent implements OnInit {
   editEmployee:EmployeeListDto =new EmployeeListDto();
   selectedDes:number=0;
   editDes:number=0;
+  checkNo:boolean=false;
+  count:number=0;
   selectedDepartmentId:number=0;
   
 
@@ -35,6 +34,7 @@ export class EmployeeComponent implements OnInit {
     this.getAllDes();
     this.getAllDep();
   }
+
   getAllDep()
   { 
     this.DepartmentList=[
@@ -70,7 +70,8 @@ export class EmployeeComponent implements OnInit {
         }
       )
     }
-    clrRec()
+
+  clrRec()
     {
       this.newEmployee.empName="";
       this.newEmployee.address="";
@@ -80,10 +81,31 @@ export class EmployeeComponent implements OnInit {
       this.newEmployee.departmentId="";
     }
 
-  checkboxvalue()
+  checkboxvalue(isChecked: any)
     {
     console.log(this.DepartmentList);    
-    this.editEmployee.departmentId = this.DepartmentList.filter(x=>x.isselected==true).map(x=>x.id).toString();
+     this.editEmployee.departmentId = this.DepartmentList.filter(x=>x.isselected==true).map(x=>x.id).toString();   
+
+     // In this we have given default value for count 
+     // because one department is already selected.
+     if(this.count == 0)
+     {
+      this.count = 1;
+     }
+     isChecked ? this.count++ : this.count--;
+     this.checkNo = this.count === 2 ? true : false;
+     console.log(this.count);
+
+    }
+
+  checkbox(isChecked: any)
+    {
+      console.log(this.DepartmentList);
+
+     // Two CheckBox Can Select Only (Work For Save Properly) 
+     isChecked ? this.count++ : this.count--;
+     this.checkNo = this.count === 2 ? true : false;
+     console.log(this.count);
     }
 
   Dropdown(e:any)
@@ -116,6 +138,7 @@ export class EmployeeComponent implements OnInit {
       }
     );
   }
+
   editClick(emp:EmployeeListDto)
   {
     this.getAllDep();
@@ -128,7 +151,13 @@ export class EmployeeComponent implements OnInit {
 
   updateClick()
   { 
+    debugger;
     this.editEmployee.departmenteditid = this.selectedDepartmentId;
+    this.editEmployee.departmentIds = this.DepartmentList.filter(x=>x.isselected==true).map(x=>x.id);
+    if(this.editEmployee.departmentIds.length > 1)
+    {
+      this.editEmployee.departmentId=0;
+    }
     this.employeeService.updateEmployee(this.editEmployee).subscribe(
       (response)=>{
         this.getAll();
@@ -154,7 +183,7 @@ export class EmployeeComponent implements OnInit {
         confirmButton: 'btn btn-success',
         cancelButton: 'btn btn-danger'
       },
-      buttonsStyling: false
+      buttonsStyling: true
     })
     
     swalWithBootstrapButtons.fire({
@@ -162,7 +191,9 @@ export class EmployeeComponent implements OnInit {
       text: "You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
+      confirmButtonColor: '#39db23',
       confirmButtonText: 'Yes, delete it!',
+      cancelButtonColor:'#e81e3c',
       cancelButtonText: 'No, cancel!',
       reverseButtons: true
     }).then((result) => {
@@ -186,15 +217,16 @@ export class EmployeeComponent implements OnInit {
         swalWithBootstrapButtons.fire(
           'Cancelled',
           'Data Not Deleted',
-          'error'
+          'error'          
         )
       }
     })
     
   }
 
-  EmptyChkBox()
+  EmployeeClick()
   {
     this.getAllDep(); 
+    this.clrRec();
   }
 }

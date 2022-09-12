@@ -1,9 +1,9 @@
 <div class="row p-2 m-2 ">
     <div class="offset-1 col-8">
-       <h2 class="text-primary offset-1"><b>Employee List</b></h2>
+       <h1 class="text-primary offset-1"><b>Employee List</b></h1>
     </div>
     <div class="col-2">
-       <button (click)="EmptyChkBox()" type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveModal">New Employee</button>
+       <button (click)="EmployeeClick()" type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveModal">New Employee</button>
     </div>
 </div>
 <div>
@@ -94,8 +94,8 @@
                 <div class="modal-body">
                     <div class="form-group row">
                         <label class="col-sm-4">Department</label>
-                        <div class="col-sm-8 offset-3" *ngFor="let dep of DepartmentList">
-                            <input type="checkbox" value="{{dep.id}}" name="{{dep.depName}}"  
+                        <div class="col-sm-8 offset-3" *ngFor="let dep of DepartmentList;let i = index">
+                            <input type="checkbox" value="{{dep.id}}" name="{{dep.depName}}" (change)="checkbox(dep.isselected)" [disabled]="!dep.isselected && checkNo"
                             [(ngModel)]="dep.isselected" class="checkbox" /><label>{{dep.depName}}</label>
                         </div>
                     </div>
@@ -175,10 +175,11 @@
                     </div>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group row">
+                    <div class="form-group row">    
                         <label class="col-sm-4">Department</label>
                         <div class="col-sm-8 offset-3" *ngFor="let dep of DepartmentList">
-                            <input type="checkbox" value="{{dep.id == editEmployee.departmentId}}" name="{{dep.depName}}" (change)="checkboxvalue()" 
+                            <input type="checkbox" value="{{dep.id == editEmployee.departmentId}}" name="{{dep.depName}}" (change)="checkboxvalue(dep.isselected)" 
+                            [disabled]="!dep.isselected && checkNo"
                             [(ngModel)]="dep.isselected" class="checkbox" /><label>{{dep.depName}}</label>
                         </div>
                     </div>
