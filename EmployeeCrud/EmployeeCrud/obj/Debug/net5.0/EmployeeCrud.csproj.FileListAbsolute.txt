@@ -27,7 +27,6 @@ E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.IdentityModel.P
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.OpenApi.dll
-E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Newtonsoft.Json.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -65,3 +64,4 @@ E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\ref\EmployeeCrud.dll
 E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\EmployeeCrud.pdb
 E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\EmployeeCrud.genruntimeconfig.cache
 E:\Crud Api\EmployeeCrud\EmployeeCrud\obj\Debug\net5.0\EmployeeCrud.csproj.AssemblyReference.cache
+E:\Crud Api\EmployeeCrud\EmployeeCrud\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

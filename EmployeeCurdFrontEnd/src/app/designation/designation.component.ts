@@ -12,6 +12,8 @@ export class DesignationComponent implements OnInit {
 
   DesignationList :Designation[]=[];
   DepartmentList :Department[]=[];
+  newDes:Designation=new Designation();
+  editDes:Designation=new Designation();
   constructor(private designationService :DesignationService) { }
 
   ngOnInit(): void {
@@ -23,6 +25,35 @@ export class DesignationComponent implements OnInit {
       (response)=>{
         this.DesignationList =response;
         console.log(this.DesignationList);
+      },
+      (error)=>{
+        console.log(error);
+      }
+    )
+  }
+  saveClick()
+  {
+    this.designationService.saveDesignation(this.newDes).subscribe(
+      (response)=>{
+        this.getAll();
+      },
+      (error)=>{
+        console.log(error);
+      }
+    )
+  }
+
+  editClick(des:any)
+  {
+    this.editDes = des;
+
+  }
+
+  updateClick()
+  {
+    this.designationService.updateDesignation(this.editDes).subscribe(
+      (response)=>{
+        this.getAll();
       },
       (error)=>{
         console.log(error);

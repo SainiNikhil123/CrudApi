@@ -177,7 +177,14 @@ export class EmployeeComponent implements OnInit {
 
   deleteClick(emp:any)
   {
+    //debugger;
     this.newEmployee=emp;
+    this.newEmployee.departmentIds = this.EmployeeList.filter(x=>x.id == this.newEmployee.id).map(x=>x.departmentId)
+    if(this.newEmployee.departmentIds.length = 1 )
+    {
+      this.newEmployee.departmentId = 0;
+    }
+    
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: 'btn btn-success',

@@ -10,6 +10,9 @@ import { DepartmentService } from '../department.service';
 export class DepartmentComponent implements OnInit {
 
   DepartmentList :Department[]=[];
+  newDep:Department=new Department();
+  editDep:Department=new Department();
+
   constructor(private departmentService :DepartmentService) { }
 
   ngOnInit(): void {
@@ -21,6 +24,35 @@ export class DepartmentComponent implements OnInit {
       (response)=>{
         this.DepartmentList =response;
         console.log(this.DepartmentList);
+      },
+      (error)=>{
+        console.log(error);
+      }
+    )
+  }
+  saveClick()
+  {
+    this.departmentService.saveDepartment(this.newDep).subscribe(
+      (response)=>{
+        this.getAll();
+      },
+      (error)=>{
+        console.log(error);
+      }
+    )
+  }
+
+  editClick(dep:any)
+  {
+    this.editDep = dep;
+
+  }
+
+  updateClick()
+  {
+    this.departmentService.updateDepartment(this.editDep).subscribe(
+      (response)=>{
+        this.getAll();
       },
       (error)=>{
         console.log(error);

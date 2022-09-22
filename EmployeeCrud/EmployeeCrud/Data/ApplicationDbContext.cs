@@ -17,6 +17,8 @@ namespace EmployeeCrud.Data
         public DbSet<Department> departments { get; set; }
         public DbSet<Designation> designations { get; set; }
         public DbSet<EmpDepTbl> empDepTbls { get; set; }
+        public DbSet<ApplicationUser> applicationUsers { get; set; }
+        public DbSet<Roles> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

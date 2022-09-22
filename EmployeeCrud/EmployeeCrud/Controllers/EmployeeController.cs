@@ -9,18 +9,21 @@ using System.Linq;
 using System;
 using System.IO;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EmployeeCrud.Controllers
 {
     [Route("api/employee")]
     [ApiController]
+    [Authorize]
     public class EmployeeController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        public EmployeeController(ApplicationDbContext context )
+        public EmployeeController(ApplicationDbContext context)
         {
             _context = context;
         }
+
         #region get/find
         [HttpGet]
         public IActionResult GetEmployees()
@@ -38,7 +41,7 @@ namespace EmployeeCrud.Controllers
                                     DesignationId = e.DesignationId,
                                     Designation = e.Designation.DesName,
                                     DepartmentId = edp.Department.Id,
-                                    Department = edp.Department.DepName,
+                                    Department = edp.Department.DepName
                                 });
 
             return Ok(employeeList);
@@ -90,6 +93,7 @@ namespace EmployeeCrud.Controllers
                 _context.employees.Add(employee);
                 _context.SaveChanges();
 
+                List<EmpDepTbl> empDepTbls = new List<EmpDepTbl>();
                 foreach (var dep in newEmployee.DepartmentIds)
                 {
                     EmpDepTbl edt = new EmpDepTbl()
@@ -97,10 +101,10 @@ namespace EmployeeCrud.Controllers
                         EmployeeId = employee.EmpId,
                         DepartmentId = dep
                     };
-                    _context.empDepTbls.Add(edt);
-                    _context.SaveChanges();
+                    empDepTbls.Add(edt);
                 }
-
+                _context.empDepTbls.AddRange(empDepTbls);
+                _context.SaveChanges();
                 return Ok();
             }
             return BadRequest();
@@ -123,12 +127,13 @@ namespace EmployeeCrud.Controllers
                 _context.employees.Update(employee);
                 _context.SaveChanges();
 
+                var empdep = _context.empDepTbls.FirstOrDefault(x => x.EmployeeId == editEmployee.Id && x.DepartmentId == editEmployee.Departmenteditid);
+                _context.empDepTbls.Remove(empdep);
+                _context.SaveChanges();
+
                 if (editEmployee.DepartmentIds.Count > 1)
                 {
-                    var empdep = _context.empDepTbls.FirstOrDefault(x => x.EmployeeId == editEmployee.Id && x.DepartmentId == editEmployee.Departmenteditid);
-                    _context.empDepTbls.Remove(empdep);
-                    _context.SaveChanges();
-
+                    List<EmpDepTbl> empDepTbls = new List<EmpDepTbl>();
                     foreach (var d in editEmployee.DepartmentIds)
                     {
                         EmpDepTbl edt = new EmpDepTbl()
@@ -136,17 +141,16 @@ namespace EmployeeCrud.Controllers
                             EmployeeId = employee.EmpId,
                             DepartmentId = d
                         };
-                        _context.empDepTbls.Add(edt);
-                        _context.SaveChanges();
+                        empDepTbls.Add(edt);
+
                     }
+                    _context.empDepTbls.AddRange(empDepTbls);
+                    _context.SaveChanges();
                 }
                 else
                 {
                     if (editEmployee.Departmenteditid != editEmployee.DepartmentId)
                     {
-                        var empdep = _context.empDepTbls.FirstOrDefault(x => x.EmployeeId == editEmployee.Id && x.DepartmentId == editEmployee.Departmenteditid);
-                        _context.empDepTbls.Remove(empdep);
-                        _context.SaveChanges();
                         EmpDepTbl edt = new EmpDepTbl()
                         {
                             EmployeeId = employee.EmpId,
@@ -160,49 +164,30 @@ namespace EmployeeCrud.Controllers
             }
             return BadRequest(error: "Error While Updating");
         }
-            
 
-    #endregion
 
-    #region del
-    [HttpDelete("{id:int}")]
-    public IActionResult DeleteEmployee(int id, int depid)
-    {
-           
-        var employee = from e in _context.employees
-                       join edp in _context.empDepTbls
-                       on e.EmpId equals edp.EmployeeId
-                       where e.EmpId == id
-                       select new
-                       {
-                           id = e.EmpId,
-                           EmpName = e.EmpName,
-                           Address = e.Address,
-                           Number = e.Number,
-                           Salary = e.Salary,
-                           Designation = e.Designation.DesName,
-                           DepartmentId = edp.Department.Id
-                       };
+        #endregion
 
-        if (employee.Count() > 1)
+        #region del
+        [HttpDelete("{id}")]
+        public IActionResult DeleteEmployee(int id, int depid)
         {
-            EmpDepTbl edt = new EmpDepTbl()
+            if (depid != 0)
             {
-                EmployeeId = id,
-                DepartmentId = depid
-            };
-            _context.empDepTbls.Remove(edt);
+                var emplyee = _context.empDepTbls.FirstOrDefault(x => x.EmployeeId == id && x.DepartmentId == depid);
+                if (emplyee == null) return BadRequest(error: "EmployeeId Or DepartmentId Incorect");
+                _context.empDepTbls.Remove(emplyee);
+            }
+            else
+            {
+                var employee = _context.employees.Find(id);
+                if (employee == null) return BadRequest(error: "EmployeeId Incorect");
+                _context.employees.Remove(employee);
+            }
+            _context.SaveChanges();
+            return Ok();
         }
-        else
-        {
-            var employees = _context.employees.Find(id);
-            if (employees == null) return BadRequest(error: "Error While Deleting");
-            _context.employees.Remove(employees);
-        }
-        _context.SaveChanges();
-        return Ok();
     }
-}
     #endregion
 
 

@@ -1,0 +1,20 @@
+export class User {
+    id:any;
+    name:any;
+    email:any;
+    userName:any;
+    password:any;
+    roleId:any;
+    role:any;
+    Token:any;
+    constructor(){
+        this.id="";
+        this.name="";
+        this.email="";
+        this.userName="";
+        this.password="";
+        this.roleId="";
+        this.role="";
+        this.Token="";
+    }
+}

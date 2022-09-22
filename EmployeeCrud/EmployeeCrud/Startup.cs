@@ -1,12 +1,17 @@
 using EmployeeCrud.Data;
 using EmployeeCrud.DTOMappingProfile;
+using EmployeeCrud.Repository;
+using EmployeeCrud.Repository.iRepository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
 namespace EmployeeCrud
 {
@@ -25,8 +30,33 @@ namespace EmployeeCrud
             string cs = Configuration.GetConnectionString("con");
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cs));
             services.AddAutoMapper(typeof(DtoMappingProfile));
+            services.AddScoped<iUserRepository, UserRepository>();
+            //JWT Authentication
+            var appsettingsection = Configuration.GetSection("appsetting");
+            var key = Encoding.ASCII.GetBytes(Configuration["JWT:Key"]);
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateLifetime = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = Configuration["jwt:Audience"],
+                    ValidIssuer = Configuration["jwt:Issuer"],
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
+            });
 
             services.AddControllers();
+
             services.AddCors(options =>
             {
                 options.AddPolicy(name: "MyPolicys",
@@ -59,7 +89,7 @@ namespace EmployeeCrud
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

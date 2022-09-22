@@ -8,27 +8,28 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class EmployeeService {
+  BaseUrl:string = "http://localhost:65158/api/employee/";
 
   constructor(private httpClient : HttpClient) { }
 
   getAllEmployees():Observable<any>
   {
-    return this.httpClient.get<any>("http://localhost:65158/api/employee");
+    return this.httpClient.get<any>(this.BaseUrl);
   }
   getEmployee(id:number):Observable<any>
   {
-    return this.httpClient.get<any>("http://localhost:65158/api/employee/"+id);
+    return this.httpClient.get<any>(this.BaseUrl+id);
   }
   saveEmployee(newEmployee:EmployeeListDto):Observable<EmployeeListDto>
   {
-    return this.httpClient.post<EmployeeListDto>("http://localhost:65158/api/employee",newEmployee);
+    return this.httpClient.post<EmployeeListDto>(this.BaseUrl,newEmployee);
   }
   updateEmployee(editEmployee:EmployeeListDto):Observable<EmployeeListDto>
   {
-    return this.httpClient.put<EmployeeListDto>("http://localhost:65158/api/employee",editEmployee);
+    return this.httpClient.put<EmployeeListDto>(this.BaseUrl,editEmployee);
   }
   deleteEmployee(id:number,depid:number):Observable<any>
   {
-    return this.httpClient.delete<any>("http://localhost:65158/api/employee/"+id +"?depid="+ depid);
+    return this.httpClient.delete<any>(this.BaseUrl+id +"?depid="+ depid);
   }
 }
