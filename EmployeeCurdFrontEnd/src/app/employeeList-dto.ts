@@ -9,7 +9,7 @@ export class EmployeeListDto {
      designation:any;
      departmentId:any;
      department:any;
-     departmentIds:number[];
+     departmentIds:any;
      departmenteditid:any;
      constructor()
      {
@@ -22,7 +22,7 @@ export class EmployeeListDto {
         this.designation="";
         this.departmentId="";
         this.department="";
-        this.departmentIds=[];
+        this.departmentIds="";
         this.departmenteditid="";
      }
 }

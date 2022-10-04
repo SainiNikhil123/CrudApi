@@ -12,7 +12,7 @@ namespace EmployeeCrud.Controllers
 {
     [Route("api/Role")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = SD.Role_Admin)]
     public class RoleController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -22,9 +22,13 @@ namespace EmployeeCrud.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Roles()
         {
-            return Ok(_context.Roles.ToList());
+            var roleList = _context.Roles.ToList();
+            var adminRole = roleList.FirstOrDefault(r => r.Name == SD.Role_Admin);
+            roleList.Remove(adminRole);
+            return Ok(roleList);
         }
         [HttpPost]
         public IActionResult AddRole([FromBody] Roles roles)

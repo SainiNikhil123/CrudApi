@@ -17,6 +17,6 @@ namespace EmployeeCrud.Models.DTOs
         public int DepartmentId { get; set; }
         public string Department { get; set; }
         public List<int> DepartmentIds { get; set; }
-        public int Departmenteditid { get; set; }
+        public List<int> Departmenteditid { get; set; }
     }
 }

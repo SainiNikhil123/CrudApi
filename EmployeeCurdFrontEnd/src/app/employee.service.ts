@@ -30,6 +30,6 @@ export class EmployeeService {
   }
   deleteEmployee(id:number,depid:number):Observable<any>
   {
-    return this.httpClient.delete<any>(this.BaseUrl+id +"?depid="+ depid);
+    return this.httpClient.delete<any>(this.BaseUrl + id +"?depid="+ depid);
   }
 }

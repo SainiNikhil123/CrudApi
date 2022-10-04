@@ -10,8 +10,11 @@ namespace EmployeeCrud.Repository.iRepository
    public interface iUserRepository
     {
         bool IsUniqueUser(string UserName);
-        ApplicationUser Authenticate(string UserName, string Password);
-        ApplicationUser Register(ApplicationUser user);
+        Token Authenticate(string UserName, string Password);
+        ApplicationUser Register(UserDto user);
         ICollection<UserDto> GetUser();
+        ClaimsDto GetClaimsById(int id);
+        //ICollection<UserClaimTable> AddClaim(ClaimsDto claims);
+        bool EditClaim(ClaimsDto claim);
     }
 }

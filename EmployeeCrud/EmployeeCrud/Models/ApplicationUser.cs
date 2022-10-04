@@ -20,12 +20,9 @@ namespace EmployeeCrud.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        [Required]
-        public int RoleId { get; set; }
-        [ForeignKey("RoleId")]
-        public Roles Roles { get; set; }
         [NotMapped]
         public string Token { get; set; }
+    
 
     }
 }

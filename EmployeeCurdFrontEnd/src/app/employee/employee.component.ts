@@ -14,17 +14,21 @@ import Swal from 'sweetalert2'
 })
 
 export class EmployeeComponent implements OnInit {
-  
+
+  emplyeeById:EmployeeListDto = new EmployeeListDto();
+  editDeleteDisplay:boolean=false;
+  editButton:boolean=false;
+  deleteButton:boolean=false;
+  addButton:boolean=false;
   DesignationList: Designation[]=[];
   DepartmentList: Department[]= [];
   EmployeeList: EmployeeListDto[] = []; 
   newEmployee:EmployeeListDto = new EmployeeListDto();
   editEmployee:EmployeeListDto =new EmployeeListDto();
   selectedDes:number=0;
-  editDes:number=0;
   checkNo:boolean=false;
   count:number=0;
-  selectedDepartmentId:number=0;
+  selectedDepartmentId:[]=[];
   
 
   constructor(private employeeService:EmployeeService, private designationService:DesignationService) { }
@@ -33,6 +37,7 @@ export class EmployeeComponent implements OnInit {
     this.getAll();
     this.getAllDes();
     this.getAllDep();
+    this.Display();
   }
 
   getAllDep()
@@ -86,15 +91,16 @@ export class EmployeeComponent implements OnInit {
     console.log(this.DepartmentList);    
      this.editEmployee.departmentId = this.DepartmentList.filter(x=>x.isselected==true).map(x=>x.id).toString();   
 
-     // In this we have given default value for count 
-     // because one department is already selected.
-     if(this.count == 0)
-     {
-      this.count = 1;
-     }
-     isChecked ? this.count++ : this.count--;
-     this.checkNo = this.count === 2 ? true : false;
-     console.log(this.count);
+    // In this we have given default value for count 
+    // because one department is already selected.
+    
+    //  if(this.count == 0)
+    //  {
+    //   this.count = 1;
+    //  }
+    //  isChecked ? this.count++ : this.count--;
+    //  this.checkNo = this.count === 2 ? true : false;
+    //  console.log(this.count);
 
     }
 
@@ -103,9 +109,10 @@ export class EmployeeComponent implements OnInit {
       console.log(this.DepartmentList);
 
      // Two CheckBox Can Select Only (Work For Save Properly) 
-     isChecked ? this.count++ : this.count--;
-     this.checkNo = this.count === 2 ? true : false;
-     console.log(this.count);
+
+     // isChecked ? this.count++ : this.count--;
+     // this.checkNo = this.count === 2 ? true : false;
+     // console.log(this.count);
     }
 
   Dropdown(e:any)
@@ -119,7 +126,7 @@ export class EmployeeComponent implements OnInit {
     this.newEmployee.departmentId = this.DepartmentList.filter(x=>x.isselected==true).map(x=>x.id);
     this.EmployeeList.push(this.newEmployee.departmentId);
     this.newEmployee.departmentIds = this.newEmployee.departmentId;
-    this.newEmployee.departmenteditid = 0;
+    this.newEmployee.departmenteditid = null;
     this.newEmployee.departmentId = 0;    
     this.employeeService.saveEmployee(this.newEmployee).subscribe(
       (response)=>{        
@@ -141,18 +148,33 @@ export class EmployeeComponent implements OnInit {
 
   editClick(emp:EmployeeListDto)
   {
+    //debugger;
     this.getAllDep();
-    this.editEmployee=emp;
-    this.editDes = this.editEmployee.designationId;
-     
-    this.selectedDepartmentId = emp.departmentId;    
-    this.DepartmentList.filter(x=>x.id == Number(this.selectedDepartmentId)).map(x=>x.isselected = true);
+    this.selectedDepartmentId = emp.departmentId;
+    this.employeeService.getEmployee(emp.id).subscribe(
+      (response)=>{
+       
+        this.emplyeeById = response;
+        this.editEmployee = this.emplyeeById;
+        this.editEmployee.departmenteditid = this.emplyeeById.departmentIds;
+        this.editEmployee.designationId = this.emplyeeById.designationId;
+          
+        for(let dep of this.emplyeeById.departmentIds) 
+        {
+          this.DepartmentList.filter(x=>x.id == Number(dep)).map(x=>x.isselected = true);
+        } 
+        
+        console.log(this.editEmployee.designationId)
+      },
+      (error)=>{
+        console.log(error)
+      }
+    )  
   }
 
   updateClick()
   { 
-    debugger;
-    this.editEmployee.departmenteditid = this.selectedDepartmentId;
+    //debugger;
     this.editEmployee.departmentIds = this.DepartmentList.filter(x=>x.isselected==true).map(x=>x.id);
     if(this.editEmployee.departmentIds.length > 1)
     {
@@ -180,7 +202,7 @@ export class EmployeeComponent implements OnInit {
     //debugger;
     this.newEmployee=emp;
     this.newEmployee.departmentIds = this.EmployeeList.filter(x=>x.id == this.newEmployee.id).map(x=>x.departmentId)
-    if(this.newEmployee.departmentIds.length = 1 )
+    if(this.newEmployee.departmentIds.length == 1 )
     {
       this.newEmployee.departmentId = 0;
     }
@@ -235,5 +257,17 @@ export class EmployeeComponent implements OnInit {
   {
     this.getAllDep(); 
     this.clrRec();
+  }
+
+  Display()
+  {
+    let role = localStorage.getItem("role")
+    let add = localStorage.getItem("AddRole")
+    let del = localStorage.getItem("DeleteRole")
+    let edit = localStorage.getItem("EditRole")
+    this.editDeleteDisplay= (role == "Admin");
+    this.editButton = (edit=="true");
+    this.addButton = (add == "true");
+    this.deleteButton = (del == "true");
   }
 }

@@ -1,3 +1,4 @@
+import { ClaimDto } from './claim-dto';
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -23,8 +24,18 @@ export class UserService {
     return this.httpClient.post<User>(this.BaseUrl +"Register",reg);
   }
 
-  loginUser(login:Login):Observable<Login>
+  loginUser(login:any):Observable<any>
   {
-    return this.httpClient.post<Login>(this.BaseUrl+"Authenticate",login);
+    return this.httpClient.post<any>(this.BaseUrl+"Authenticate",login);
+  }
+
+  getClaimBYId(id:any):Observable<any>
+  {
+    return this.httpClient.get<any>(this.BaseUrl+"Claims?id="+id);
+  }
+
+  updateClaims(editClm:ClaimDto):Observable<any>
+  {
+    return this.httpClient.put<any>(this.BaseUrl+"Claim",editClm);
   }
 }

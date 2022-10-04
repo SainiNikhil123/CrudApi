@@ -38,18 +38,28 @@ namespace EmployeeCrud.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("RoleId");
-
                     b.ToTable("applicationUsers");
+                });
+
+            modelBuilder.Entity("EmployeeCrud.Models.ClaimsTable", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ClaimTable");
                 });
 
             modelBuilder.Entity("EmployeeCrud.Models.Department", b =>
@@ -150,15 +160,34 @@ namespace EmployeeCrud.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("EmployeeCrud.Models.ApplicationUser", b =>
+            modelBuilder.Entity("EmployeeCrud.Models.UserClaimTable", b =>
                 {
-                    b.HasOne("EmployeeCrud.Models.Roles", "Roles")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.Navigation("Roles");
+                    b.Property<int>("ClaimId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "ClaimId");
+
+                    b.HasIndex("ClaimId");
+
+                    b.ToTable("UserClaimTable");
+                });
+
+            modelBuilder.Entity("EmployeeCrud.Models.UserRoleTable", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RoleId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("userRoleTables");
                 });
 
             modelBuilder.Entity("EmployeeCrud.Models.EmpDepTbl", b =>
@@ -195,6 +224,44 @@ namespace EmployeeCrud.Migrations
                     b.Navigation("Designation");
 
                     b.Navigation("Employees");
+                });
+
+            modelBuilder.Entity("EmployeeCrud.Models.UserClaimTable", b =>
+                {
+                    b.HasOne("EmployeeCrud.Models.ClaimsTable", "claims")
+                        .WithMany()
+                        .HasForeignKey("ClaimId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EmployeeCrud.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("claims");
+                });
+
+            modelBuilder.Entity("EmployeeCrud.Models.UserRoleTable", b =>
+                {
+                    b.HasOne("EmployeeCrud.Models.Roles", "Roles")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EmployeeCrud.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("EmployeeCrud.Models.EmpDepTbl", b =>

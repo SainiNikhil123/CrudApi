@@ -1,8 +1,10 @@
+import { Router } from '@angular/router';
 import { RoleService } from './../role.service';
 import { Role } from './../role';
 import { UserService } from './../user.service';
 import { Component, OnInit } from '@angular/core';
 import { User } from '../user';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-register',
@@ -15,7 +17,7 @@ export class RegisterComponent implements OnInit {
   RoleList:Role[]=[];
   selectedRole:number=0;
 
-  constructor(private UserService: UserService, private RoleService:RoleService) { }
+  constructor(private UserService: UserService, private RoleService:RoleService, private route:Router) { }
 
   ngOnInit(): void {
     this.getAllRole();
@@ -28,7 +30,15 @@ export class RegisterComponent implements OnInit {
     //this.newReg.role = null;
     this.UserService.registerUser(this.newReg).subscribe(
       (response)=>{
-        
+        console.log(response);
+        this.route.navigate([""]);
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'You are Sucessfully Registered',
+          showConfirmButton: false,
+          timer: 1500
+        })        
       },
       (error)=>{
         console.log(error);

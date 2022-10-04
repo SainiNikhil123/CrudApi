@@ -2,7 +2,7 @@
     <div class="offset-1 col-8">
        <h1 class="text-primary offset-1"><b>Employee List</b></h1>
     </div>
-    <div class="col-2">
+    <div *ngIf="editDeleteDisplay == true || addButton == true" class="col-2">
        <button (click)="EmployeeClick()" type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveModal">New Employee</button>
     </div>
 </div>
@@ -17,7 +17,7 @@
                 <th>Salary</th>
                 <th>Designation</th>
                 <th>Department</th>
-                <th>Action</th>
+                <th *ngIf="editDeleteDisplay == true|| editButton == true|| deleteButton == true">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -29,11 +29,11 @@
                 <td>{{employee.salary}}</td>
                 <td>{{employee.designation}}</td>
                 <td>{{employee.department}}</td>
-                <td>
+                <td >
                     <div>
-                        <button (click)="editClick(employee)" class="btn btn-info p-1 m-1" data-toggle="modal"  
+                        <button *ngIf="editDeleteDisplay == true || editButton == true" (click)="editClick(employee)" class="btn btn-info p-1 m-1" data-toggle="modal"  
                         data-target="#editModal">Edit</button>
-                        <button (click)="deleteClick(employee)" class="btn btn-danger p-1 m-1" >Delete</button>
+                        <button *ngIf="editDeleteDisplay == true || deleteButton == true" (click)="deleteClick(employee)" class="btn btn-danger p-1 m-1" >Delete</button>
                     </div>
                 </td>
             </tr>
@@ -188,10 +188,10 @@
                     <div class="form-group row">
                         <label for="txtdes" class="col-sm-4">Designation</label>
                         <div class="col-sm-8" >
-                            <select (change)="Dropdown($event)" [(ngModel)]="editEmployee.designationId" [name]="editEmployee.designation"
+                            <select (change)="Dropdown($event)" [(ngModel)]="editEmployee.designationId" [name]="editEmployee.designationId"
                                 class="form-control" >
                             <option value=" ">Select Designation</option>
-                            <option value="{{des.id}}" *ngFor="let des of DesignationList" >
+                            <option [value]="des.id" *ngFor="let des of DesignationList" >
                                 {{des.desName}}
                             </option>
                             </select>
@@ -200,7 +200,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button (click)="updateClick()" type="button" class="btn btn-success" data-dismiss="modal">SAVE</button>
+                    <button (click)="updateClick()" type="button" class="btn btn-success" data-dismiss="modal">UPDATE</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">CANCEL</button>
                 </div>
 

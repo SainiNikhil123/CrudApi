@@ -12,7 +12,7 @@ namespace EmployeeCrud.Controllers
 {
     [Route("api/designation")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = SD.Role_Admin)]
     public class DesignationController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -22,6 +22,7 @@ namespace EmployeeCrud.Controllers
         }
      
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Designation()
         {
             return Ok(_context.designations.ToList());

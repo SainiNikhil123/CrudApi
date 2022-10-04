@@ -15,7 +15,7 @@ namespace EmployeeCrud.Controllers
 {
     [Route("api/employee")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee + "," + SD.Role_Trainee)]
     public class EmployeeController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -51,32 +51,29 @@ namespace EmployeeCrud.Controllers
         public IActionResult GetEmployee(int id)
         {
             var employeeFromDb = _context.employees.Find(id);
-            if (employeeFromDb == null) return BadRequest(error: "Employee Id Is Invalid");
+            var departmentFromDb = _context.empDepTbls.Where(x => x.EmployeeId == id).Select(x => x.DepartmentId).ToList();
 
-            var employee = (from e in _context.employees
-                            join edp in _context.empDepTbls
-                            on e.EmpId equals edp.EmployeeId
-                            where e.EmpId == id
-                            select new EmployeeListDto()
-                            {
-                                Id = e.EmpId,
-                                EmpName = e.EmpName,
-                                Address = e.Address,
-                                Number = e.Number,
-                                Salary = e.Salary,
-                                DesignationId = e.DesignationId,
-                                Designation = e.Designation.DesName,
-                                DepartmentId = edp.Department.Id,
-                                Department = edp.Department.DepName
-                            }).FirstOrDefault();
+            if (employeeFromDb == null || departmentFromDb == null) return BadRequest(error: "Employee Id Is Invalid");
 
-            return Ok(employee);
+            EmployeeListDto emp = new EmployeeListDto()
+            {
+                Id = employeeFromDb.EmpId,
+                EmpName = employeeFromDb.EmpName,
+                Address = employeeFromDb.Address,
+                Number = employeeFromDb.Number,
+                Salary = employeeFromDb.Salary,
+                DesignationId = employeeFromDb.DesignationId,
+                DepartmentIds = departmentFromDb
+            };
+
+            return Ok(emp);
         }
 
-        #endregion
+        #endregion 
 
         #region post/put
         [HttpPost]
+        [Authorize(Policy = "AddRole")]
         public IActionResult SaveEmployee([FromBody] EmployeeListDto newEmployee)
         {
             if (newEmployee != null && ModelState.IsValid)
@@ -110,6 +107,7 @@ namespace EmployeeCrud.Controllers
             return BadRequest();
         }
         [HttpPut]
+        [Authorize(Policy = "EditRole")]
         public IActionResult UpdateEmployee([FromBody] EmployeeListDto editEmployee)
         {
             var employee = _context.employees.Find(editEmployee.Id);
@@ -127,38 +125,36 @@ namespace EmployeeCrud.Controllers
                 _context.employees.Update(employee);
                 _context.SaveChanges();
 
-                var empdep = _context.empDepTbls.FirstOrDefault(x => x.EmployeeId == editEmployee.Id && x.DepartmentId == editEmployee.Departmenteditid);
-                _context.empDepTbls.Remove(empdep);
-                _context.SaveChanges();
+                List<int> addDep = editEmployee.DepartmentIds.Except(editEmployee.Departmenteditid).ToList();
 
-                if (editEmployee.DepartmentIds.Count > 1)
+                List<int> removeDep = editEmployee.Departmenteditid.Except(editEmployee.DepartmentIds).ToList();
+                 
+                if (removeDep.Count != 0)
                 {
                     List<EmpDepTbl> empDepTbls = new List<EmpDepTbl>();
-                    foreach (var d in editEmployee.DepartmentIds)
+                    foreach (var item in removeDep)
                     {
-                        EmpDepTbl edt = new EmpDepTbl()
-                        {
-                            EmployeeId = employee.EmpId,
-                            DepartmentId = d
-                        };
-                        empDepTbls.Add(edt);
-
+                        var empdep = _context.empDepTbls.FirstOrDefault(x => x.EmployeeId == editEmployee.Id && x.DepartmentId == item);
+                        empDepTbls.Add(empdep);
                     }
-                    _context.empDepTbls.AddRange(empDepTbls);
+                    _context.empDepTbls.RemoveRange(empDepTbls);
                     _context.SaveChanges();
                 }
-                else
+                if (addDep.Count != 0)
                 {
-                    if (editEmployee.Departmenteditid != editEmployee.DepartmentId)
-                    {
-                        EmpDepTbl edt = new EmpDepTbl()
+                        List<EmpDepTbl> empDepTbls = new List<EmpDepTbl>();
+                        foreach (var d in addDep)
                         {
-                            EmployeeId = employee.EmpId,
-                            DepartmentId = editEmployee.DepartmentId
-                        };
-                        _context.empDepTbls.Add(edt);
+                            EmpDepTbl edt = new EmpDepTbl()
+                            {
+                                EmployeeId = employee.EmpId,
+                                DepartmentId = d
+                            };
+                            empDepTbls.Add(edt);
+
+                        }
+                        _context.empDepTbls.AddRange(empDepTbls);
                         _context.SaveChanges();
-                    }
                 }
                 return Ok();
             }
@@ -170,6 +166,7 @@ namespace EmployeeCrud.Controllers
 
         #region del
         [HttpDelete("{id}")]
+        [Authorize(Policy = "DeleteRole")]
         public IActionResult DeleteEmployee(int id, int depid)
         {
             if (depid != 0)

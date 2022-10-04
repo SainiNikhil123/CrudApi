@@ -12,7 +12,7 @@ namespace EmployeeCrud.Controllers
 {
     [Route("api/department")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = SD.Role_Admin)]
     public class DepartmentController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -20,6 +20,7 @@ namespace EmployeeCrud.Controllers
         {
             _context = context;
         }
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Departments()
         {

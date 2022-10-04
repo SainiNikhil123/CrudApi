@@ -31,6 +31,7 @@ namespace EmployeeCrud
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cs));
             services.AddAutoMapper(typeof(DtoMappingProfile));
             services.AddScoped<iUserRepository, UserRepository>();
+
             //JWT Authentication
             var appsettingsection = Configuration.GetSection("appsetting");
             var key = Encoding.ASCII.GetBytes(Configuration["JWT:Key"]);
@@ -55,6 +56,14 @@ namespace EmployeeCrud
                 };
             });
 
+            services.AddAuthorization(x =>
+            {
+                x.AddPolicy("EditRole", policy => policy.RequireClaim(SD.Claim_Edit,"true"));
+                x.AddPolicy("DeleteRole", policy => policy.RequireClaim(SD.Claim_Delete, "true"));
+                x.AddPolicy("AddRole", policy => policy.RequireClaim(SD.Claim_Add, "true"));
+            });
+
+
             services.AddControllers();
 
             services.AddCors(options =>
@@ -68,6 +77,7 @@ namespace EmployeeCrud
                                                .AllowAnyMethod();
                     });
             });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EmployeeCrud", Version = "v1" });
